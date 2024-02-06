@@ -1,0 +1,21 @@
+.header{
+    color: rgba(36, 98, 231, 0.767);
+    font-size: 20px;
+    font-weight: bold;
+    text-align: center;
+    margin-top: 20px;
+    margin-bottom: 20px;
+}
+.contact-container{
+    display: flex;
+    align-items: end;
+    flex-direction: column;
+    margin-top: 20px;
+}
+.content-container{
+    display: flex;
+    flex-direction: column;
+    background-color: rgb(190, 130, 145);
+    margin-top: 20px;
+    margin-bottom: 20px;
+}

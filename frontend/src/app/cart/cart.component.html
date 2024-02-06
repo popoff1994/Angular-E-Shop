@@ -1,0 +1,29 @@
+<app-navbar></app-navbar>
+<div class="cart-wrapper">
+    <div *ngFor="let item of items" class="cart-item">
+        <div class="item-details">
+            <img src="{{ item.IMAGE_URL }}" alt="{{ item.NAME }}" class="product-image">
+            <div class="item-info">
+                <h3>{{ item.NAME }}</h3>
+                <p>{{ item.DESCRIPTION }}</p>
+                <p>Price: {{ item.PRICE | currency:'USD' }}</p>
+                <!-- Make sure to handle multiplication safely -->
+                <p>Total: {{ (item.PRICE * item.QUANTITY) | currency:'USD' }}</p>
+            </div>
+        </div>
+        <div class="item-modification">
+            <p>Quantity: <input type="number" [(ngModel)]="quantities[item.PRODUCT_ID]" class="quantity-input"></p>
+            <div class="btn-container">
+                <!-- Adjusted to directly use item instead of item.product -->
+                <button class="apply-btn" (click)="addCustomQuantity(item, quantities[item.PRODUCT_ID])">Apply</button>
+                <button class="remove-btn" (click)="removeItemFromCart(item)">Remove 1</button>
+                <button class="remove-btn" (click)="removeAllFromCart(item)">Remove All</button>
+            </div>
+        </div>
+    </div>
+    <div class="cart-total">
+        <h3>Total: {{ getTotal() | currency:'USD' }}</h3>
+        <button class="checkout-btn">Checkout</button>
+    </div>
+</div>
+

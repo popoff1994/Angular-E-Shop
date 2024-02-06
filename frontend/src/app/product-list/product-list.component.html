@@ -1,0 +1,12 @@
+<app-navbar></app-navbar>
+<div class="product-list">
+<div *ngFor="let product of products" class="product-item">
+<img [src]="product.IMAGE_URL" alt="{{ product.NAME }}" class="product-image">
+<h2>{{ product.NAME }}</h2>
+<p>{{ product.DESCRIPTION }}</p>
+<p>Price: {{ product.PRICE | currency:'USD' }}</p>
+<input type="number" [(ngModel)]="quantities[product.PRODUCT_ID]" min="1">
+<button (click)="addToCart(product, quantities[product.PRODUCT_ID] || 1)">Add to Cart</button>
+</div>
+
+</div>
