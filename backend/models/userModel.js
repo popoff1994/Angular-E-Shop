@@ -19,7 +19,30 @@ const findByUsername = async (username) => {
     }
 };
 
+const getUserRoles = async (userId) => {
+    const sql = `SELECT r.NAME AS role_name 
+                 FROM ROLES r 
+                 INNER JOIN USER_ROLES ur ON r.ID = ur.ROLE_ID 
+                 WHERE ur.USER_ID = :userId`;
+    try {
+        const result = await db.execute(sql, {userId}); 
+        console.log('Rows:', result.rows); // Add this line to check the rows
+        if (!result || !result.rows || !Array.isArray(result.rows) || result.rows.length === 0) {
+            console.log(`No roles found for userId: ${userId}`);
+            return [];
+        }
+        return result.rows.map(row => row.ROLE_NAME);
+    } catch (error) {
+        console.error("Error fetching user roles:", error);
+        throw error;
+    }
+};
+
+
+
+
 module.exports = {
     create,
     findByUsername,
+    getUserRoles
 };

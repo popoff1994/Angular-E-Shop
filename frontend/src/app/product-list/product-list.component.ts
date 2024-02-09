@@ -22,6 +22,7 @@ export class ProductListComponent implements OnInit {
   quantities: {[productId: number]: number} = {};
   isLoggedIn = false;
   private authSubscription: Subscription;
+  isAdmin: boolean = false;
 
   constructor(private productService: ProductService, private cartService: CartService, private authService: AuthService) {
     this.authSubscription = this.authService.isLoggedIn$.subscribe(isLoggedIn => {
@@ -31,9 +32,13 @@ export class ProductListComponent implements OnInit {
     ngOnInit() {
       this.productService.getProducts().subscribe((data: Product[]) => {
         this.products = data;
+        this.isAdmin = this.authService.userHasRole('admin');
+        console.log('isAdmin:', this.isAdmin);
       });
     }
-
+    checkUserRole(role: string): boolean {
+      return this.authService.userHasRole(role);
+    }
 
     addToCart(product: Product, quantity: number): void {
       if (!this.authService.isLoggedIn()) {

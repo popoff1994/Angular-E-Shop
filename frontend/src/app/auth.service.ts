@@ -2,6 +2,7 @@ import { Injectable } from '@angular/core';
 import { Observable, BehaviorSubject} from 'rxjs';
 import { tap } from 'rxjs/operators';
 import { HttpClient } from '@angular/common/http';
+import { jwtDecode } from "jwt-decode";
 
 @Injectable({
   providedIn: 'root'
@@ -26,6 +27,22 @@ export class AuthService {
 
   public isLoggedIn(): boolean {
     return this.hasToken();
+  }
+  getUserRoles(): string[] {
+    const token = localStorage.getItem('token');
+    if (!token) return [];
+    try {
+      const decodedToken: any = jwtDecode(token);
+      return decodedToken.roles || [];
+    } catch (error) {
+      console.error('Error decoding token', error);
+      return [];
+    }
+  }
+
+  userHasRole(requiredRole: string): boolean {
+    const roles = this.getUserRoles();
+    return roles.includes(requiredRole);
   }
 
 
