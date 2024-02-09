@@ -17,19 +17,22 @@ exports.login = async (req, res) => {
     const { username, password } = req.body;
     try {
         const user = await userModel.findByUsername(username);
-        console.log(user);
-        console.log({ submittedPassword: password, storedHash: user.PASSWORD_HASH });
         if (user && await bcrypt.compare(password, user.PASSWORD_HASH)) {
+            console.log('Before calling getUserRoles');
+            const roles = await userModel.getUserRoles(user.USER_ID);
+            console.log('After calling getUserRoles');
+            console.log('User:', user.USER_ID);
+            console.log('Roles before signing token:', roles);
             const token = jwt.sign(
-                { user_id: user.USER_ID, username: user.USERNAME },
+                { user_id: user.USER_ID, username: user.USERNAME, roles: roles},
                 process.env.JWT_SECRET,
                 { expiresIn: '24h' }
             );
             res.cookie('token', token, {
-                httpOnly: true, // JavaScript access not allowed
-                secure: true, // Only transmit cookies over HTTPS
-                sameSite: 'strict', // Mitigate CSRF attack
-                maxAge: 24 * 60 * 60 * 1000 // Cookie expiration: 24 hours
+                httpOnly: true,
+                secure: true,
+                sameSite: 'strict', 
+                maxAge: 24 * 60 * 60 * 1000
             });
             res.json({ message: "Login successful", token })
         } else {
