@@ -4,7 +4,8 @@ import { Router } from '@angular/router';
 import { CommonModule } from '@angular/common';
 import { AuthService } from '../auth.service';
 import { Subscription } from 'rxjs';
-import { HttpClientModule } from '@angular/common/http';
+import { ChangeDetectorRef } from '@angular/core';
+import { NgZone } from '@angular/core';
 
 
 @Component({
@@ -13,15 +14,16 @@ import { HttpClientModule } from '@angular/common/http';
   imports: [RouterModule, CommonModule],
   templateUrl: './navbar.component.html',
   styleUrl: './navbar.component.css',
-  providers : [AuthService, HttpClientModule]
 })
 export class NavbarComponent {
   isLoggedIn = false;
   private authSubscription: Subscription;
 
-  constructor(private authService: AuthService, private router: Router) {
+  constructor(private authService: AuthService, private router: Router, private ngZone: NgZone) {
     this.authSubscription = this.authService.isLoggedIn$.subscribe(isLoggedIn => {
-      this.isLoggedIn = isLoggedIn;
+      this.ngZone.run(() => {
+        this.isLoggedIn = isLoggedIn;
+      });
     });
   }
 

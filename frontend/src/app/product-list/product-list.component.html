@@ -1,11 +1,23 @@
-<app-navbar></app-navbar>
+<div class="product-container">
+<header class="products-header">
+    <h2 class="header">Products</h2>
+    <br>
+    <button class="product-btn" *ngIf="isAdmin" [routerLink]="['/create-product']">Add a Product</button>
+</header>
+
 <div class="product-list">
 <div *ngFor="let product of products" class="product-item">
-<img [src]="product.IMAGE_URL" alt="{{ product.NAME }}" class="product-image">
-<h2>{{ product.NAME }}</h2>
-<p>{{ product.DESCRIPTION }}</p>
-<p>Price: {{ product.PRICE | currency:'USD' }}</p>
-<input type="number" [(ngModel)]="quantities[product.PRODUCT_ID]" min="1">
-<button (click)="addToCart(product, quantities[product.PRODUCT_ID] || 1)">Add to Cart</button>
+<a [routerLink]="['/product-details', product.PRODUCT_ID]">
+    <img [src]="getProductImageUrl(product)" alt="{{ product.NAME }}" class="product-image">
+    <div class="product-content-container">
+    <h2 class="product-name">{{ product.NAME }}</h2>
+    <p class="product-description">{{ product.SHORT_DESCRIPTION }}</p>
+    </div>
+</a>
+
+<p class="product-price">Price: {{ product.PRICE | currency:'USD' }}</p>
+<input class="input" type="number" [(ngModel)]="quantities[product.PRODUCT_ID]" placeholder="1" min="1">
+<button class="add-btn" (click)="addToCart(product, quantities[product.PRODUCT_ID] || 1)">Add to Cart</button>
+</div>
 </div>
 </div>

@@ -6,6 +6,7 @@ import { AppComponent } from './app/app.component';
 import { routes } from './app/app.routes';
 import { provideHttpClient, withFetch } from '@angular/common/http';
 import { importProvidersFrom } from '@angular/core';
+import { AuthService } from './app/auth.service';
 
 
 if (environment.production) {
@@ -14,8 +15,9 @@ if (environment.production) {
 
 bootstrapApplication(AppComponent, {
   providers: [
+    AuthService,
     provideHttpClient(
-      withFetch()
+      withFetch(),
       ),
     importProvidersFrom(
       RouterModule.forRoot(routes),

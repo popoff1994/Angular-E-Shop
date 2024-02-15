@@ -1,0 +1,33 @@
+<div *ngIf="isLoading">
+  Loading product details...
+</div>
+
+<div *ngIf="!isLoading && product" class="product-details-container">
+  <h1 class="product-name">{{ product.NAME }}</h1>
+  <div class="selected-image">
+    <img *ngIf="product.IMAGE_URLS.length" [src]="product.IMAGE_URLS[selectedImageIndex]" alt="{{ product.NAME }}">
+  </div>
+
+  <div class="thumbnails">
+    <img *ngFor="let imageUrl of product.IMAGE_URLS; let i = index" [src]="imageUrl" alt="{{ product.NAME }}" (click)="selectImage(i)" [class.active]="i === selectedImageIndex">
+  </div>
+
+  <div class="product-info" *ngIf="product">
+    <p class="category">Category: <span>{{ product.CATEGORY_NAME }}</span></p>
+    <p class="price">Price: {{ product.PRICE | currency }}</p>
+    <p class="short-description">{{ product.SHORT_DESCRIPTION }}</p>
+    <p class="long-description">{{ product.LONG_DESCRIPTION }}</p>
+    
+    <div class="specs" *ngIf="product?.SPECS">
+      <h3>Specifications</h3>
+      <ul *ngIf="product?.SPECS">
+        <li *ngFor="let key of objectKeys(product.SPECS)">{{ key }}: {{ product.SPECS[key] }}</li>
+      </ul>
+    </div>
+    
+    <div class="category-description" *ngIf="product?.CATEGORY_DESCRIPTION">
+      <h3>About the Category</h3>
+      <p>{{ product.CATEGORY_DESCRIPTION }}</p>
+    </div>
+  </div>
+</div>

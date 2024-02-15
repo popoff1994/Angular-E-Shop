@@ -3,14 +3,22 @@ const bcrypt = require('bcrypt');
 const jwt = require('jsonwebtoken');
 
 exports.register = async (req, res) => {
+    const { username, password, email } = req.body;
     try {
-        const hashedPassword = await bcrypt.hash(req.body.password, 10);
-        const user = await userModel.create(req.body.username, hashedPassword, req.body.email);
-        res.status(201).json(user);
+        const hashedPassword = await bcrypt.hash(password, 10);
+        const newUser = await userModel.create(username, hashedPassword, email);
+
+        const defaultRole = 'user'; 
+        await userModel.assignRole(newUser.id, defaultRole);
+
+        res.status(201).json({ message: 'User created and default role assigned successfully', user: newUser });
     } catch (error) {
-        res.status(500).json({ message: error.message });
+        console.error('Registration error:', error);
+        res.status(500).json({ message: 'Error during the registration process' });
     }
 };
+
+
 
 
 exports.login = async (req, res) => {

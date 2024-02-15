@@ -21,6 +21,42 @@ async function initialize() {
 async function close() {
     await oracledb.getPool().close();
 }
+async function commit() {
+    const connection = await oracledb.getConnection();
+    try {
+        await connection.commit();
+    } catch (err) {
+        console.error('Error committing transaction:', err);
+        throw err;
+    } finally {
+        if(connection) {
+            try {
+                await connection.close();
+            } catch (err) {
+                console.error('Error closing connection:', err);
+                throw err;
+            }
+        }
+    }
+}
+async function rollback() {
+    const connection = await oracledb.getConnection();
+    try {
+        await connection.rollback();
+    } catch (err) {
+        console.error('Error rolling back transaction:', err);
+        throw err;
+    } finally {
+        if(connection) {
+            try {
+                await connection.close();
+            } catch (err) {
+                console.error('Error closing connection:', err);
+                throw err;
+            }
+        }
+    }
+}
 
 function execute(sql, binds = [], opts = {}) {
     return new Promise(async (resolve, reject) => {
@@ -48,5 +84,11 @@ function execute(sql, binds = [], opts = {}) {
 module.exports = {
     initialize,
     close,
-    execute
+    execute,
+    rollback,
+    commit,
+    STRING: oracledb.STRING,
+    OUT_FORMAT_OBJECT: oracledb.OUT_FORMAT_OBJECT,
+    BIND_OUT: oracledb.BIND_OUT,
+    NUMBER: oracledb.NUMBER,
 };

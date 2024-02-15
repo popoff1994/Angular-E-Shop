@@ -17,15 +17,39 @@ class CartModel {
   
 
   static async getCartItems(userId) {
-    const sql = `SELECT ci.quantity, p.* FROM CART_ITEMS ci JOIN PRODUCTS p ON ci.product_id = p.PRODUCT_ID WHERE ci.user_id = :userId`;
+    const sql = `
+      SELECT 
+        ci.quantity, 
+        p.PRODUCT_ID,
+        p.NAME,
+        p.SHORT_DESCRIPTION,
+        p.LONG_DESCRIPTION,
+        p.SPECS,
+        p.CATEGORY_ID,
+        p.PRICE,
+        (
+          SELECT pi.image_url FROM product_images pi
+          WHERE pi.product_id = p.PRODUCT_ID
+          ORDER BY pi.image_url
+          FETCH FIRST 1 ROW ONLY
+        ) AS IMAGE_URLS
+      FROM CART_ITEMS ci
+      JOIN PRODUCTS p ON ci.product_id = p.PRODUCT_ID
+      WHERE ci.user_id = :userId
+    `;
     try {
       const params = { userId };
       const result = await db.execute(sql, params);
-      return result;
+      const rows = result.rows.map(row => ({
+        ...row,
+        IMAGE_URLS: row.IMAGE_URLS ? row.IMAGE_URLS.split(',') : []
+      }));
+      return rows;
     } catch (err) {
       throw err;
     }
   }
+  
   static async removeFromCart(userId, productId) {
     const checkSql = `SELECT * FROM CART_ITEMS WHERE user_id = :userId AND product_id = :productId`;
     const checkResult = await db.execute(checkSql, { userId, productId });

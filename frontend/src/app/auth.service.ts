@@ -44,23 +44,32 @@ export class AuthService {
     const roles = this.getUserRoles();
     return roles.includes(requiredRole);
   }
+  createUser(username: string, password: string, email: string, role: string): Observable<any> {
+    return this.http.post('http://localhost:3000/users/register', { username, password, email, role }, { withCredentials: true });
+  }
+
 
 
   login(username: string, password: string): Observable<any> {
+    console.log('Attempting login');
     return this.http.post(this.loginUrl, { username, password }, { withCredentials: true }).pipe(
       tap((response: any) => {
+        console.log('Login successful, updating state');
         localStorage.setItem('token', response.token);
         this.isLoggedInSubject.next(true);
       })
     );
   }
-
+  
   logout(): Observable<any> {
+    console.log('Attempting logout');
     return this.http.get(this.logoutUrl, { withCredentials: true }).pipe(
       tap(() => {
+        console.log('Logout successful, updating state');
         localStorage.removeItem('token');
         this.isLoggedInSubject.next(false);
       })
     );
-  }  
+  }
+  
 }
