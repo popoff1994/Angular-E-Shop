@@ -18,7 +18,6 @@ export class CartComponent {
   quantities: any;
 
   constructor(private cartService: CartService) {
-    this.items = this.cartService.getItems();
     this.quantities = {};
     this.items.forEach(item => {
     this.quantities[item.PRODUCT_ID] = item.QUANTITY;
@@ -54,27 +53,43 @@ export class CartComponent {
         }
     });
 }
-
-  addToCart(product: Product, QUANTITY: number): void {
-    this.cartService.addToCart(product, QUANTITY);
-    window.alert('Your product has been added to the cart!');
-  }
-  addCustomQuantity(product: Product, quantity: number): void {
-    if (quantity > 0) {
-        this.cartService.setCartQuantity(product.PRODUCT_ID, quantity).subscribe({
-            next: () => {
-                alert('Quantity updated successfully');
-                this.loadCartItems();
-            },
-            error: (error) => {
-                console.error('Error updating quantity:', error);
-                alert('Error updating quantity');
-            }
-        });
-    } else {
-        window.alert('Please enter a valid quantity!');
-    }
+getProductImageUrl(item: Product): string { 
+  return item.IMAGE_URLS.length > 0 ? item.IMAGE_URLS[0] : 'path/to/placeholder/image.png';
 }
+
+
+
+
+addToCart(product: Product, QUANTITY: number): void {
+  this.cartService.addToCart(product, QUANTITY).subscribe({
+    next: () => {
+      window.alert('Your product has been added to the cart!');
+      this.loadCartItems();
+    },
+    error: (error) => {
+      console.error('Error adding product to cart:', error);
+      window.alert('Error adding product to the cart!');
+    }
+  });
+}
+
+  addCustomQuantity(product: Product, quantity?: number): void {
+    if (!quantity || quantity <= 0) {
+      window.alert('Please enter a valid quantity!');
+      return;
+    }
+    this.cartService.setCartQuantity(product.PRODUCT_ID, quantity).subscribe({
+      next: () => {
+        alert('Quantity updated successfully');
+        this.loadCartItems();
+      },
+      error: (error) => {
+        console.error('Error updating quantity:', error);
+        alert('Error updating quantity');
+      }
+    });
+  }
+  
 
   changeQuantity(product: Product, QUANTITY: number): void {
     this.cartService.changeQuantity(product, QUANTITY);
@@ -82,13 +97,26 @@ export class CartComponent {
     this.quantities[product.PRODUCT_ID] = QUANTITY;
   }
   ngOnInit(): void {
+    this.cartService.items$.subscribe(items => {
+      this.items = items;
+      console.log('items in ngOnInit', items);
+      this.updateQuantities();
+    });
     this.loadCartItems();
   }
+  
+  updateQuantities(): void {
+    this.quantities = {};
+    this.items.forEach(item => {
+      this.quantities[item.PRODUCT_ID] = item.QUANTITY;
+    });
+  }
+  
 
   loadCartItems(): void {
     this.cartService.fetchCartItems().subscribe({
       next: (items) => {
-        console.log(items);
+        console.log('items in loadcartitems', items);
         this.items = items;
       },
       error: (error) => {
@@ -96,11 +124,11 @@ export class CartComponent {
       }
     });
   }
-  
-  
-  
   clearCart(): void {
     this.cartService.clearCart();
-  }
+    this.items = [];
+    this.quantities = {};
+
+  }  
 }
 

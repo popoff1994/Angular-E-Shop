@@ -2,7 +2,7 @@ import { Injectable } from '@angular/core';
 import { Product } from './models/product';
 import { BehaviorSubject, Observable } from 'rxjs';
 import { HttpClient } from '@angular/common/http';
-import { map } from 'rxjs/operators';
+import { map, tap } from 'rxjs/operators';
 import { CartItem } from './models/cart-item';
 
 
@@ -22,12 +22,18 @@ export class CartService {
     return this.http.post(`${this.apiUrl}/add`, { productId: product.PRODUCT_ID, QUANTITY }, { withCredentials: true });
   }
 
-  fetchCartItems(): Observable<CartItem[]> {
-    return this.http.get<{metaData: any[], rows: CartItem[]}>(`${this.apiUrl}/items`, { withCredentials: true })
-      .pipe(
-        map(response => response.rows)
-      );
-  }
+fetchCartItems(): Observable<CartItem[]> {
+  return this.http.get<CartItem[]>(`${this.apiUrl}/items`, { withCredentials: true })
+    .pipe(
+      map(items => items.map(item => ({
+        ...item,
+        IMAGE_URLS: item.IMAGE_URLS ? item.IMAGE_URLS : []
+      })))
+    );
+}
+
+  
+  
   
 removeFromCart(productId: number): Observable<any> {
   const url = `${this.apiUrl}/remove`;
@@ -67,7 +73,12 @@ setCartQuantity(productId: number, QUANTITY: number): Observable<any> {
     return this.items;
   }
 
-  clearCart() : void {
-    this.items = [];
+  clearCart(): Observable<any> {
+    return this.http.post(`${this.apiUrl}/clear`, {}, { withCredentials: true }).pipe(
+      tap(() => {
+        this.itemsSubject.next([]);
+      })
+    );
   }
+  
 }

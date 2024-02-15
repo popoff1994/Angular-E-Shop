@@ -1,0 +1,43 @@
+<header class="create-header">
+    <h2 class="header">Create Product</h2>
+</header>
+<div class="create-wrapper">
+    <form (ngSubmit)="createProduct(product)" #productForm="ngForm">
+        <div class="form-group">
+            <label for="name">Product Name</label>
+            <input type="text" class="form-control" id="name" required [(ngModel)]="product.NAME" name="name">
+        </div>
+        <div class="form-group">
+            <label for="category">Category</label>
+            <input type="text" class="form-control" id="category" required [(ngModel)]="product.CATEGORY_ID" name="category">
+        </div>
+        <div class="form-group">
+            <label for="description">Short Description</label>
+            <input type="text" class="form-control" id="description" required [(ngModel)]="product.SHORT_DESCRIPTION" name="description">
+        </div>
+        <div class="form-group">
+            <label for="long-description">Long Description</label>
+            <textarea class="form-control" id="long-description" [(ngModel)]="product.LONG_DESCRIPTION" name="longDescription" rows="5" cols="50"></textarea>
+          </div>
+          <div class="form-group">
+            <label for="specs">Specs (JSON format)</label>
+            <textarea class="form-control" id="specs" [(ngModel)]="product.SPECS" name="specs" rows="5"></textarea>
+          </div>
+          
+        <div class="form-group">
+            <label for="price">Price</label>
+            <input type="number" class="form-control" id="price" required [(ngModel)]="product.PRICE" name="price">
+        </div>
+        <div class="form-group" *ngFor="let imageUrl of product.IMAGE_URLS; let i = index">
+            <label for="image-url-{{i}}">Image URL {{i + 1}}</label>
+            <input type="text" class="form-control" id="image-url-{{i}}" placeholder="Add URL" [(ngModel)]="product.IMAGE_URLS[i]" [name]="'image-url-' + i">
+            <button type="button" (click)="removeImageUrl(i)" *ngIf="product.IMAGE_URLS.length > 1">Remove</button>
+          </div>
+          <button type="button" (click)="addImageUrl()">Add Another Image URL</button>          
+          
+
+        <div class="btn-container">
+        <button type="submit" class="btn btn-primary" [disabled]="!productForm.valid">Create Product</button>
+    </div>
+    </form>
+</div>

@@ -51,7 +51,6 @@ exports.setCartQuantity = async (req, res) => {
   try {
       const userId = req.user.user_id;
       const { productId, QUANTITY } = req.body;
-      console.log('userId:', userId, 'productId:', productId, 'QUANTITY:', QUANTITY);
       await CartModel.setCartQuantity(userId, productId, QUANTITY);
       res.status(200).json({ message: 'Cart item quantity updated successfully.' });
   } catch (error) {

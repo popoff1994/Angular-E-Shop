@@ -3,9 +3,10 @@
     <div>
         <ul class="navbar-nav">
             <a [routerLink]="['/products']" class="nav-link">Products</a>
-            <a [routerLink]="['/cart']" class="nav-link">Cart</a>
+            <a [routerLink]="['/cart']" *ngIf="isLoggedIn" class="nav-link">Cart</a>
             <a [routerLink]="['/Contact']" class="nav-link">Contact</a>
             <a [routerLink]="['/login']" *ngIf="!isLoggedIn" class="nav-link">Login</a>
+            <a [routerLink]="['/register']" *ngIf="!isLoggedIn" class="nav-link">Sign Up</a>
             <button class="logout-btn" *ngIf="isLoggedIn" (click)="logout()">Logout</button>
         </ul>
     </div>

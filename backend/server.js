@@ -27,7 +27,7 @@ db.initialize().catch((err) => {
 
 // Routes
 app.use('/users', userRoutes);
-app.use('/api/products', productRoutes);
+app.use('/products', productRoutes);
 app.use('/cart', cartRoutes)
 
 

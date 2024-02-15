@@ -5,14 +5,13 @@ import { ProductService } from '../product.service';
 import { CartService } from '../cart.service';
 import { AuthService } from '../auth.service';
 import { Product } from '../models/product';
-import { NavbarComponent } from '../navbar/navbar.component';
 import { Subscription } from 'rxjs';
 import { RouterModule } from '@angular/router';
 
 @Component({
   selector: 'app-product-list',
   standalone: true,
-  imports: [CommonModule, NavbarComponent, RouterModule, FormsModule],
+  imports: [CommonModule,RouterModule, FormsModule],
   templateUrl: './product-list.component.html',
   styleUrls: ['./product-list.component.css'],
   providers: [ProductService]
@@ -31,9 +30,12 @@ export class ProductListComponent implements OnInit {
   }
     ngOnInit() {
       this.productService.getProducts().subscribe((data: Product[]) => {
-        this.products = data;
+        this.products = data.map(product => ({
+          ...product,
+
+          IMAGE_URLS: product.IMAGE_URLS || []
+        }));
         this.isAdmin = this.authService.userHasRole('admin');
-        console.log('isAdmin:', this.isAdmin);
       });
     }
     checkUserRole(role: string): boolean {
@@ -58,6 +60,9 @@ export class ProductListComponent implements OnInit {
       });
     }
     
+getProductImageUrl(product: Product): string {
+  return product.IMAGE_URLS.length > 0 ? product.IMAGE_URLS[0] : 'path/to/placeholder/image.png';
+}
 
 ngOnDestroy() {
   this.authSubscription.unsubscribe();
