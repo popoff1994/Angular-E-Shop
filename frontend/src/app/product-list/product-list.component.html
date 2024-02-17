@@ -12,10 +12,9 @@
     <div class="product-content-container">
     <h2 class="product-name">{{ product.NAME }}</h2>
     <p class="product-description">{{ product.SHORT_DESCRIPTION }}</p>
+    <p class="product-price">Price: {{ product.PRICE | currency:'USD' }}</p>
     </div>
 </a>
-
-<p class="product-price">Price: {{ product.PRICE | currency:'USD' }}</p>
 <input class="input" type="number" [(ngModel)]="quantities[product.PRODUCT_ID]" placeholder="1" min="1">
 <button class="add-btn" (click)="addToCart(product, quantities[product.PRODUCT_ID] || 1)">Add to Cart</button>
 </div>

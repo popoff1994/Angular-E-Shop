@@ -3,6 +3,7 @@ const cors = require('cors');
 const userRoutes = require('./routes/users');
 const productRoutes = require('./routes/products');
 const cartRoutes = require('./routes/cart');
+const categoryRoutes = require('./routes/category');
 const db = require('./db');
 require('dotenv').config();
 const app = express();
@@ -29,6 +30,7 @@ db.initialize().catch((err) => {
 app.use('/users', userRoutes);
 app.use('/products', productRoutes);
 app.use('/cart', cartRoutes)
+app.use('/categories', categoryRoutes);
 
 
 app.listen(port, () => {
