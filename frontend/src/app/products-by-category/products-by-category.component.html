@@ -1,0 +1,25 @@
+<div class="category-products-container">
+    <header class="category-products-header">
+      <h2>Products by Category</h2>
+    </header>
+  
+    <div *ngIf="products.length === 0" class="no-products">
+      <p>No products found in this category.</p>
+    </div>
+  
+    <div class="products-grid">
+      <div *ngFor="let product of products" class="product-card">
+        <a [routerLink]="['/product-details', product.PRODUCT_ID]">
+        <img [src]="getProductImageUrl(product)" alt="{{ product.NAME }}" class="product-image">
+          <div class="product-info">
+            <h3 class="product-name">{{ product.NAME }}</h3>
+            <p class="product-description">{{ product.SHORT_DESCRIPTION }}</p>
+            <p class="product-price">Price: {{ product.PRICE | currency:'USD' }}</p>
+          </div>
+        </a>
+        <input class="input" type="number" [(ngModel)]="quantities[product.PRODUCT_ID]" placeholder="1" min="1">
+        <button class="add-btn" (click)="addToCart(product, quantities[product.PRODUCT_ID] || 1)">Add to Cart</button>
+      </div>
+    </div>
+  </div>
+  

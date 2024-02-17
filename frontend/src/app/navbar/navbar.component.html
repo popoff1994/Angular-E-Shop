@@ -2,6 +2,7 @@
     <a href="#" class="navbar-brand">Fidos Fine Fund</a>
     <div>
         <ul class="navbar-nav">
+            <a [routerLink]="['/categories']" class="nav-link">Categories</a>
             <a [routerLink]="['/products']" class="nav-link">Products</a>
             <a [routerLink]="['/cart']" *ngIf="isLoggedIn" class="nav-link">Cart</a>
             <a [routerLink]="['/Contact']" class="nav-link">Contact</a>

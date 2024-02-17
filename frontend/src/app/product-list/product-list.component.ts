@@ -11,7 +11,7 @@ import { RouterModule } from '@angular/router';
 @Component({
   selector: 'app-product-list',
   standalone: true,
-  imports: [CommonModule,RouterModule, FormsModule],
+  imports: [CommonModule, RouterModule, FormsModule],
   templateUrl: './product-list.component.html',
   styleUrls: ['./product-list.component.css'],
   providers: [ProductService]
@@ -60,9 +60,10 @@ export class ProductListComponent implements OnInit {
       });
     }
     
-getProductImageUrl(product: Product): string {
-  return product.IMAGE_URLS.length > 0 ? product.IMAGE_URLS[0] : 'path/to/placeholder/image.png';
-}
+    getProductImageUrl(product: Product): string {
+      console.log("product",product);
+      return product.IMAGE_URLS.length > 0 ? product.IMAGE_URLS[0] : 'path/to/placeholder/image.png';
+    }
 
 ngOnDestroy() {
   this.authSubscription.unsubscribe();

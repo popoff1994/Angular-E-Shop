@@ -1,0 +1,14 @@
+<div class="categories-container">
+    <h2>Categories</h2>
+    <ul class="category-list">
+      <li *ngFor="let category of categories" (click)="onCategoryClick(category.ID)">
+        <a></a>
+        <img [src]="category.IMAGE_URL" alt="{{ category.NAME }}" class="category-image">
+        <div class="category-info">
+          <p class="category-name">{{ category.NAME }}</p>
+          <p class="category-description">{{ category.DESCRIPTION }}</p>
+        </div>
+      </li>
+    </ul>
+  </div>
+  

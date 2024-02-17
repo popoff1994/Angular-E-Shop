@@ -5,7 +5,7 @@
 <div *ngIf="!isLoading && product" class="product-details-container">
   <h1 class="product-name">{{ product.NAME }}</h1>
   <div class="selected-image">
-    <img *ngIf="product.IMAGE_URLS.length" [src]="product.IMAGE_URLS[selectedImageIndex]" alt="{{ product.NAME }}">
+    <img *ngIf="product.IMAGE_URLS.length" [src]="product.IMAGE_URLS[selectedImageIndex]" alt="{{ product.NAME }}" class="product-image">
   </div>
 
   <div class="thumbnails">

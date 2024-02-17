@@ -31,10 +31,22 @@ const createProduct = async (req, res) => {
   }
 };
 
+const getProductsByCategory = async (req, res) => {
+  try {
+    const categoryId = parseInt(req.params.categoryId, 10);
+    const products = await ProductModel.findByCategoryId(categoryId);
+    res.json(products);
+  } catch (err) {
+    console.error('Error fetching products by category:', err.message);
+    res.status(500).send('Error fetching products by category');
+  }
+}
+
 
 
 module.exports = {
   getProducts,
   createProduct,
   getProduct,
+  getProductsByCategory,
 };
