@@ -10,6 +10,7 @@ import { ProductDetailsComponent } from './product-details/product-details.compo
 import { CategoriesComponent } from './categories/categories.component';
 import { ProductsByCategoryComponent } from './products-by-category/products-by-category.component';
 
+
 export const routes: Routes = [
     { path: '', component: HomeComponent },
     { path: 'products', component: ProductListComponent },
@@ -21,9 +22,6 @@ export const routes: Routes = [
     { path: 'product-details/:productId', component: ProductDetailsComponent},
     { path: 'products/category/:categoryId', component: ProductsByCategoryComponent},
     { path: 'categories', component: CategoriesComponent},
-
-
-
 ];
 
 export const AppRoutingModule = RouterModule.forRoot(routes);

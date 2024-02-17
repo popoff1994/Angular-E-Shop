@@ -31,6 +31,7 @@ const createProduct = async (req, res) => {
   }
 };
 
+
 const getProductsByCategory = async (req, res) => {
   try {
     const categoryId = parseInt(req.params.categoryId, 10);

@@ -29,7 +29,9 @@ export class ProductService {
       })
     );
   }
+
   getProductsByCategory(categoryId: number): Observable<Product[]> {
     return this.http.get<Product[]>(`${this.apiUrl}/category/${categoryId}`);
   }
+
 }

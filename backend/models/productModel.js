@@ -1,4 +1,4 @@
-const db = require('../db');
+const db = require('../db'); // Ensure this path matches where your db.js is located
 
 const findAll = async () => {
   const sql = `
@@ -100,7 +100,6 @@ const findById = async (productId) => {
 };
 
 
-
 const create = async (name, short_description, long_description, specs, price, category_id, imageUrls) => {
   const productSql = `
     INSERT INTO products (name, short_description, long_description, specs, price, category_id) 
@@ -183,7 +182,44 @@ const findByCategoryId = async (categoryId) => {
   }
 };
 
+const create = async (name, short_description, long_description, specs, price, category_id, imageUrls) => {
+  const productSql = `
+    INSERT INTO products (name, short_description, long_description, specs, price, category_id) 
+    VALUES (:NAME, :SHORT_DESCRIPTION, :LONG_DESCRIPTION, :SPECS, :PRICE, :CATEGORY_ID) 
+    RETURNING product_id INTO :PRODUCT_ID
+  `;
+  const productBinds = {
+    NAME: name,
+    SHORT_DESCRIPTION: short_description,
+    LONG_DESCRIPTION: long_description,
+    SPECS: specs,
+    PRICE: price,
+    CATEGORY_ID: category_id,
+    PRODUCT_ID: { dir: db.BIND_OUT, type: db.NUMBER }
+  };
+  const options = { autoCommit: false };
 
+  try {
+    const result = await db.execute(productSql, productBinds, options);
+    const productId = result.outBinds.PRODUCT_ID[0];
+
+    if (imageUrls && imageUrls.length > 0) {
+      const imageSql = `
+        INSERT INTO product_images (product_id, image_url) 
+        VALUES (:PRODUCT_ID, :IMAGE_URL)
+      `;
+      for (let imageUrl of imageUrls) {
+        await db.execute(imageSql, { PRODUCT_ID: productId, IMAGE_URL: imageUrl }, { autoCommit: false });
+      }
+    }
+
+    await db.commit();
+    return { productId, ...result };
+  } catch (err) {
+    await db.rollback();
+    throw err;
+  }
+};
 
 module.exports = {
   findAll,
